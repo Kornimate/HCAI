@@ -18,7 +18,7 @@ function MainPage() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
   const [completedCrop, setCompletedCrop] = useState(null);
-  const [currentImageUrl, setCurrentImageUrl] = useState(null); // Initialize to null, will use config initialImage
+  const [currentImageUrl, setCurrentImageUrl] = useState(null); 
 
   const {
     logoPlaceholder,
@@ -31,16 +31,14 @@ function MainPage() {
       generateButton,
       modifiedHeading,
       regionInputs,
-      rewritePrompt,
       submitButton,
       dropdown,
     },
   } = config.branding;
 
-  // Calculate smaller dimensions for the initial image (e.g., 80% of generated image size)
   const initialImageSize = {
-    width: generatedImage.width.sm * 0.8, // 80% of 500px = 400px
-    height: generatedImage.height.sm * 0.8, // 80% of 500px = 400px
+    width: generatedImage.width.sm * 0.8, 
+    height: generatedImage.height.sm * 0.8, 
   };
 
   const onCropComplete = useCallback((crop) => {
@@ -82,14 +80,25 @@ function MainPage() {
       setIsModified(true); // Switch to modified view with initial image
       setCurrentImageUrl(initialPlaceholderImageUrl); // Use initial placeholder for first generation
     } else {
-      // Simulate generating a new image based on modifications and prompt
-      console.log('Generating new image with modifications:', modifications, 'and prompt:', prompt);
+      // Simulate generating a new image based on modifications
+      console.log('Generating new image with modifications:', modifications);
       setCurrentImageUrl(generatedPlaceholderImageUrl); // Switch to a new placeholder image
       setSelectedRegions([]); // Clear regions for new selections
       setModifications({}); // Clear modifications for new inputs
       setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 }); // Reset crop
       setCompletedCrop(null); // Reset completed crop
-      // Here you would call your API to generate the new image and update currentImageUrl with the result
+      // API call and update currentImageUrl with the result
+    }
+  };
+
+  const handleDownload = () => {
+    if (currentImageUrl) {
+      const link = document.createElement('a');
+      link.href = currentImageUrl;
+      link.download = `generated_image_${Date.now()}.png`; 
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -199,8 +208,8 @@ function MainPage() {
           ) : (
             <Box
               sx={{
-                width: initialImageSize.width, // Smaller size for initial image
-                height: initialImageSize.height, // Smaller size for initial image
+                width: initialImageSize.width,
+                height: initialImageSize.height,
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -287,35 +296,34 @@ function MainPage() {
               </Box>
             ))}
 
-            <Box sx={{ mb: 2, p: 2, backgroundColor: rewritePrompt.backgroundColor, borderRadius: 4, maxWidth: 600, mx: 'auto' }}>
-              <Typography variant="h6" sx={{ color: rewritePrompt.textColor, mb: 1 }}>
-                {rewritePrompt.label}
-              </Typography>
-              <TextField
-                fullWidth
-                multiline
-                rows={rewritePrompt.rows}
-                variant="outlined"
-                placeholder={rewritePrompt.placeholder}
-                value={prompt}
-                onChange={handlePromptChange}
-                sx={{ backgroundColor: '#fff' }}
-              />
-            </Box>
-
-            <Button
-              variant="contained"
-              onClick={handleGenerate}
-              sx={{
-                backgroundColor: submitButton.backgroundColor,
-                color: submitButton.textColor,
-                mb: 4,
-                padding: submitButton.padding,
-                '&:hover': { backgroundColor: submitButton.hoverColor },
-              }}
-            >
-              {submitButton.text}
-            </Button>
+            {selectedRegions.length > 0 && (
+              <Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center', width: '100%' }}>
+                <Button
+                  variant="contained"
+                  onClick={handleGenerate}
+                  sx={{
+                    backgroundColor: submitButton.backgroundColor,
+                    color: submitButton.textColor,
+                    padding: submitButton.padding,
+                    '&:hover': { backgroundColor: submitButton.hoverColor },
+                  }}
+                >
+                  {submitButton.text}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleDownload}
+                  sx={{
+                    backgroundColor: '#4CAF50', 
+                    color: '#fff',
+                    padding: submitButton.padding,
+                    '&:hover': { backgroundColor: '#45a049' },
+                  }}
+                >
+                  Download
+                </Button>
+              </Box>
+            )}
           </>
         )}
       </Container>

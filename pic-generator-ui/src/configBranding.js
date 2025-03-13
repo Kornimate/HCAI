@@ -1,7 +1,6 @@
-// src/config.js
-import pixcassoLogo from './images/pixcasso_logo.png'; // Import the logo image
-import pixcassoWhole from './images/pixcasso_whole.png'; // Import the front page image
-import aiDrawing from './images/aiDrawing.gif'; // Import the animated GIF
+import pixcassoLogo from './images/pixcasso_logo.png'; 
+import pixcassoWhole from './images/pixcasso_whole.png'; 
+import aiDrawing from './images/aiDrawing.gif'; 
 
 export const config = {
   branding: {
