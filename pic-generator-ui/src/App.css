@@ -3,6 +3,11 @@
   background-color: #fff;
 }
 
+/* Ensure the crop area is centered */
+.ReactCrop {
+  display: inline-block;
+}
+
 /* Optional: Adjust logo animation if desired */
 .App-logo {
   height: 40vmin;

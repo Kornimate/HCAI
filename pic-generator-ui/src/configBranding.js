@@ -1,30 +1,27 @@
 // src/config.js
 export const config = {
     branding: {
-      // Logo Placeholder
+      // Existing front page config (unchanged)
       logoPlaceholder: {
-        text: 'P', // Text to display in the circular placeholder
-        size: 40, // Size of the placeholder (in pixels)
-        backgroundColor: '#fff', // Background color of the placeholder
-        textColor: '#000', // Color of the placeholder text
+        text: 'P',
+        size: 40,
+        backgroundColor: '#fff',
+        textColor: '#000',
       },
-      // Heading Placeholder
       headingPlaceholder: {
-        text: 'Lorem ipsum dolor', // Placeholder text for the heading
-        variant: 'h4', // Material-UI typography variant
-        color: '#455A64', // Color of the heading
-        fontWeight: 'bold', // Font weight
+        text: 'Lorem ipsum dolor',
+        variant: 'h4',
+        color: '#455A64',
+        fontWeight: 'bold',
       },
-      // Main Image Placeholder
       imagePlaceholder: {
-        width: { xs: 200, sm: 300 }, // Responsive width
-        height: { xs: 200, sm: 300 }, // Responsive height
-        backgroundColor: '#E0E0E0', // Background color
-        borderColor: '#B0BEC5', // Border color
-        iconSize: { xs: 60, sm: 100 }, // Size of the icon
-        iconColor: '#B0BEC5', // Color of the icon
+        width: { xs: 200, sm: 300 },
+        height: { xs: 200, sm: 300 },
+        backgroundColor: '#E0E0E0',
+        borderColor: '#B0BEC5',
+        iconSize: { xs: 60, sm: 100 },
+        iconColor: '#B0BEC5',
       },
-      // Button Styling
       button: {
         text: 'Get Started',
         backgroundColor: '#455A64',
@@ -32,16 +29,70 @@ export const config = {
         textColor: '#fff',
         padding: '10px 20px',
       },
-      // Description Text
       descriptionPlaceholder: {
         text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        <br /><br />`,
+        <br /><br />
+        Ready to create stunning images? Get started today!`,
         color: '#78909C',
         maxWidth: 700,
       },
-      // Header Styling
       header: {
         backgroundColor: '#2E3B55',
+      },
+  
+      // Main page config
+      mainPage: {
+        initialHeading: 'AI Model Introduction',
+        generatedImage: {
+          width: { xs: 300, sm: 500 },
+          height: { xs: 300, sm: 500 },
+          backgroundColor: '#E0E0E0',
+          borderColor: '#B0BEC5',
+        },
+        promptArea: {
+          label: 'Prompt space',
+          placeholder: 'Enter your prompt here...',
+          backgroundColor: '#F5F5F5',
+          textColor: '#333',
+          rows: 4,
+        },
+        generateButton: {
+          text: 'Generate',
+          backgroundColor: '#607D8B',
+          hoverColor: '#455A64',
+          textColor: '#fff',
+          padding: '10px 20px',
+        },
+        modifiedHeading: 'Modify Generated Image',
+        regionInputs: {
+          labelPrefix: 'Modification',
+          inputLabel: 'Describe modification for region',
+          backgroundColor: '#F5F5F5',
+          textColor: '#333',
+        },
+        rewritePrompt: {
+          label: 'Prompt space',
+          placeholder: 'Enter new prompt here...',
+          backgroundColor: '#F5F5F5',
+          textColor: '#333',
+          rows: 4,
+        },
+        submitButton: {
+          text: 'Generate',
+          backgroundColor: '#607D8B',
+          hoverColor: '#455A64',
+          textColor: '#fff',
+          padding: '10px 20px',
+        },
+        dropdown: {
+          menuIconColor: '#fff',
+          options: [
+            { label: 'New Pic Generation', placeholder: 'New Pic Placeholder' },
+            { label: 'Last Generation', placeholder: 'Last Gen Placeholder' },
+          ],
+          backgroundColor: '#424242',
+          textColor: '#fff',
+        },
       },
     },
   };

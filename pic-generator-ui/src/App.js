@@ -1,29 +1,22 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Box, Button } from '@mui/material';
-import ImageIcon from '@mui/icons-material/Image'; 
+import { useNavigate } from 'react-router-dom';
+import ImageIcon from '@mui/icons-material/Image';
+import { config } from './configBranding';
 import './App.css';
-import { config } from './configBranding'; //config file
 
 function App() {
-  const handleGetStarted = () => {
-    console.log('Navigate to main page');
-  };
+  const navigate = useNavigate();
+  const { logoPlaceholder, headingPlaceholder, imagePlaceholder, button, descriptionPlaceholder, header } = config.branding;
 
-  const {
-    logoPlaceholder,
-    headingPlaceholder,
-    imagePlaceholder,
-    button,
-    descriptionPlaceholder,
-    header,
-  } = config.branding;
+  const handleGetStarted = () => {
+    navigate('/main');
+  };
 
   return (
     <div className="App">
-      {/* Header Section */}
       <AppBar position="static" sx={{ backgroundColor: header.backgroundColor }}>
         <Toolbar>
-          {/* Placeholder Logo from config */}
           <Box
             sx={{
               width: logoPlaceholder.size,
@@ -40,13 +33,10 @@ function App() {
               {logoPlaceholder.text}
             </Typography>
           </Box>
-          {/* navigation links here if needed */}
         </Toolbar>
       </AppBar>
 
-      {/* Main Section */}
       <Container sx={{ mt: 8, textAlign: 'center', padding: { xs: 2, md: 4 } }}>
-        {/* Image Placeholder from config */}
         <Box
           sx={{
             width: imagePlaceholder.width,
@@ -63,12 +53,10 @@ function App() {
           <ImageIcon sx={{ fontSize: imagePlaceholder.iconSize, color: imagePlaceholder.iconColor }} />
         </Box>
 
-        {/* Heading Placeholder from config */}
         <Typography variant={headingPlaceholder.variant} sx={{ mb: 2, color: headingPlaceholder.color, fontWeight: headingPlaceholder.fontWeight }}>
           {headingPlaceholder.text}
         </Typography>
 
-        {/* Get Started Button */}
         <Button
           variant="contained"
           onClick={handleGetStarted}
@@ -83,7 +71,6 @@ function App() {
           {button.text}
         </Button>
 
-        {/* Description Placeholder from config */}
         <Typography variant="body1" sx={{ color: descriptionPlaceholder.color, maxWidth: descriptionPlaceholder.maxWidth, mx: 'auto' }} dangerouslySetInnerHTML={{ __html: descriptionPlaceholder.text }} />
       </Container>
     </div>
