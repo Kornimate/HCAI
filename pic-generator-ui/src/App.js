@@ -1,7 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ImageIcon from '@mui/icons-material/Image';
 import { config } from './configBranding';
 import './App.css';
 
@@ -29,9 +28,17 @@ function App() {
               mr: 2,
             }}
           >
-            <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
-              {logoPlaceholder.text}
-            </Typography>
+            {logoPlaceholder.logoSrc ? (
+              <img
+                src={logoPlaceholder.logoSrc}
+                alt="Pixcasso Logo"
+                style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+              />
+            ) : (
+              <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
+                {logoPlaceholder.text}
+              </Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -50,7 +57,15 @@ function App() {
             border: `1px solid ${imagePlaceholder.borderColor}`,
           }}
         >
-          <ImageIcon sx={{ fontSize: imagePlaceholder.iconSize, color: imagePlaceholder.iconColor }} />
+          {imagePlaceholder.src ? (
+            <img
+              src={imagePlaceholder.src}
+              alt="Front Page Preview"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <Typography variant="body1">No Image Available</Typography>
+          )}
         </Box>
 
         <Typography variant={headingPlaceholder.variant} sx={{ mb: 2, color: headingPlaceholder.color, fontWeight: headingPlaceholder.fontWeight }}>

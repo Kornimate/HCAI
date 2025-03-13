@@ -1,28 +1,34 @@
 // src/config.js
+import pixcassoLogo from './images/pixcasso_logo.png'; // Import the logo image
+import pixcassoWhole from './images/pixcasso_whole.png'; // Import the front page image
+import aiDrawing from './images/aiDrawing.gif'; // Import the animated GIF
+
 export const config = {
   branding: {
     // Logo Placeholder
     logoPlaceholder: {
-      text: 'P', // Text to display in the circular placeholder
-      size: 40, // Size of the placeholder (in pixels)
-      backgroundColor: '#fff', // Background color of the placeholder
-      textColor: '#000', // Color of the placeholder text
+      text: 'P', // Fallback text if the image fails to load
+      size: 40,
+      backgroundColor: '#fff',
+      textColor: '#000',
+      logoSrc: pixcassoLogo, // Use the imported image
     },
     // Heading Placeholder
     headingPlaceholder: {
-      text: 'Pixcasso: AI Art, Human Control.', // Placeholder text for the heading
-      variant: 'h4', // Material-UI typography variant
-      color: '#455A64', // Color of the heading
-      fontWeight: 'bold', // Font weight
+      text: 'Pixcasso: AI Art, Human Control.',
+      variant: 'h4',
+      color: '#455A64',
+      fontWeight: 'bold',
     },
-    // Main Image Placeholder
+    // Main Image Placeholder (for front page)
     imagePlaceholder: {
-      width: { xs: 200, sm: 300 }, // Responsive width
-      height: { xs: 200, sm: 300 }, // Responsive height
-      backgroundColor: '#E0E0E0', // Background color
-      borderColor: '#B0BEC5', // Border color
-      iconSize: { xs: 60, sm: 100 }, // Size of the icon
-      iconColor: '#B0BEC5', // Color of the icon
+      width: { xs: 200, sm: 300 },
+      height: { xs: 200, sm: 300 },
+      backgroundColor: '#E0E0E0',
+      borderColor: '#B0BEC5',
+      iconSize: { xs: 60, sm: 100 },
+      iconColor: '#B0BEC5',
+      src: pixcassoWhole, // Use the imported image
     },
     // Button Styling
     button: {
@@ -47,10 +53,13 @@ export const config = {
     },
     // Main Page Config
     mainPage: {
-      initialHeading: 'AI Model Introduction',
+      initialHeading: 'Hi, I am Pixcasso! How can I help?',
+      initialImage: {
+        src: aiDrawing, 
+      },
       generatedImage: {
-        width: { xs: 300, sm: 500 },
-        height: { xs: 300, sm: 500 },
+        width: { xs: 250, sm: 400 },
+        height: { xs: 250, sm: 400 },
         backgroundColor: '#E0E0E0',
         borderColor: '#B0BEC5',
       },

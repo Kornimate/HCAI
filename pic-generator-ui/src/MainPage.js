@@ -6,8 +6,9 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { config } from './configBranding';
 
-// Placeholder image (replace with your generated image URL or import)
-const placeholderImageUrl = 'https://via.placeholder.com/500x500'; // Example placeholder
+// Placeholder images (simulating new generation)
+const initialPlaceholderImageUrl = 'https://via.placeholder.com/500x500';
+const generatedPlaceholderImageUrl = 'https://via.placeholder.com/500x500/FF5733/FFFFFF';
 
 function MainPage() {
   const [isModified, setIsModified] = useState(false);
@@ -17,12 +18,14 @@ function MainPage() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
   const [completedCrop, setCompletedCrop] = useState(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState(null); // Initialize to null, will use config initialImage
 
   const {
     logoPlaceholder,
     header,
     mainPage: {
       initialHeading,
+      initialImage,
       generatedImage,
       promptArea,
       generateButton,
@@ -34,67 +37,62 @@ function MainPage() {
     },
   } = config.branding;
 
-  // Handle crop completion (when user finalizes a region)
+  // Calculate smaller dimensions for the initial image (e.g., 80% of generated image size)
+  const initialImageSize = {
+    width: generatedImage.width.sm * 0.8, // 80% of 500px = 400px
+    height: generatedImage.height.sm * 0.8, // 80% of 500px = 400px
+  };
+
   const onCropComplete = useCallback((crop) => {
     if (crop.width && crop.height) {
       const regionId = selectedRegions.length + 1;
       setSelectedRegions([...selectedRegions, { id: regionId, ...crop }]);
       setModifications({ ...modifications, [regionId]: '' });
       setCompletedCrop(crop);
-      setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 }); // Reset crop for next selection
+      setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
     }
   }, [selectedRegions, modifications]);
 
-  // Handle modification input change
   const handleModificationChange = (regionId, value) => {
     setModifications({ ...modifications, [regionId]: value });
   };
 
-  // Handle region removal with reindexing
   const handleRemoveRegion = (regionIdToRemove) => {
-    // Filter out the region to remove
     const updatedRegions = selectedRegions.filter((region) => region.id !== regionIdToRemove);
-    
-    // Reindex the remaining regions
     const reindexedRegions = updatedRegions.map((region, index) => ({
       ...region,
       id: index + 1,
     }));
-
-    // Update modifications to match new region IDs
     const updatedModifications = {};
     reindexedRegions.forEach((region) => {
       if (modifications[region.id] || modifications[regionIdToRemove]) {
         updatedModifications[region.id] = modifications[region.id] || modifications[regionIdToRemove];
       }
     });
-
     setSelectedRegions(reindexedRegions);
     setModifications(updatedModifications);
   };
 
-  // Handle prompt change
   const handlePromptChange = (event) => {
     setPrompt(event.target.value);
   };
 
-  // Handle generate/regenerate
   const handleGenerate = () => {
     if (!isModified) {
-      setIsModified(true); // Simulate image generation
+      setIsModified(true); // Switch to modified view with initial image
+      setCurrentImageUrl(initialPlaceholderImageUrl); // Use initial placeholder for first generation
     } else {
-      console.log('Regenerating with modifications:', modifications, 'and prompt:', prompt);
-      // Reset state to start fresh
-      setIsModified(false);
-      setSelectedRegions([]);
-      setModifications({});
-      setPrompt('');
-      setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
-      setCompletedCrop(null);
+      // Simulate generating a new image based on modifications and prompt
+      console.log('Generating new image with modifications:', modifications, 'and prompt:', prompt);
+      setCurrentImageUrl(generatedPlaceholderImageUrl); // Switch to a new placeholder image
+      setSelectedRegions([]); // Clear regions for new selections
+      setModifications({}); // Clear modifications for new inputs
+      setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 }); // Reset crop
+      setCompletedCrop(null); // Reset completed crop
+      // Here you would call your API to generate the new image and update currentImageUrl with the result
     }
   };
 
-  // Dropdown menu handlers
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -110,7 +108,6 @@ function MainPage() {
 
   return (
     <div>
-      {/* Header with Dropdown */}
       <AppBar position="static" sx={{ backgroundColor: header.backgroundColor }}>
         <Toolbar>
           <Box
@@ -125,9 +122,17 @@ function MainPage() {
               mr: 2,
             }}
           >
-            <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
-              {logoPlaceholder.text}
-            </Typography>
+            {logoPlaceholder.logoSrc ? (
+              <img
+                src={logoPlaceholder.logoSrc}
+                alt="Pixcasso Logo"
+                style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+              />
+            ) : (
+              <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
+                {logoPlaceholder.text}
+              </Typography>
+            )}
           </Box>
           <MenuIcon
             sx={{ color: dropdown.menuIconColor, cursor: 'pointer' }}
@@ -152,13 +157,11 @@ function MainPage() {
         </Toolbar>
       </AppBar>
 
-      {/* Main Content */}
       <Container sx={{ mt: 8, textAlign: 'center', padding: { xs: 2, md: 4 } }}>
         <Typography variant="h4" sx={{ mb: 4, color: '#455A64', fontWeight: 'bold' }}>
           {isModified ? modifiedHeading : initialHeading}
         </Typography>
 
-        {/* Image with Region Selection */}
         <Box sx={{ mb: 4, mx: 'auto', position: 'relative', display: 'inline-block' }}>
           {isModified ? (
             <>
@@ -168,12 +171,11 @@ function MainPage() {
                 onComplete={onCropComplete}
               >
                 <img
-                  src={placeholderImageUrl}
+                  src={currentImageUrl}
                   alt="Generated"
                   style={{ width: generatedImage.width.sm, height: generatedImage.height.sm }}
                 />
               </ReactCrop>
-              {/* Display already selected regions */}
               {selectedRegions.map((region) => (
                 <Box
                   key={region.id}
@@ -197,10 +199,8 @@ function MainPage() {
           ) : (
             <Box
               sx={{
-                width: generatedImage.width.sm,
-                height: generatedImage.height.sm,
-                backgroundColor: generatedImage.backgroundColor,
-                border: `1px solid ${generatedImage.borderColor}`,
+                width: initialImageSize.width, // Smaller size for initial image
+                height: initialImageSize.height, // Smaller size for initial image
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -209,8 +209,8 @@ function MainPage() {
               }}
             >
               <img
-                src={placeholderImageUrl}
-                alt="Placeholder"
+                src={initialImage.src || initialPlaceholderImageUrl}
+                alt="Robot Drawing"
                 style={{ width: '60%', height: '60%', borderRadius: '50%' }}
               />
             </Box>
@@ -248,7 +248,6 @@ function MainPage() {
           </>
         ) : (
           <>
-            {/* Region Modification Inputs */}
             {selectedRegions.map((region) => (
               <Box
                 key={region.id}
@@ -288,7 +287,6 @@ function MainPage() {
               </Box>
             ))}
 
-            {/* Rewrite Prompt */}
             <Box sx={{ mb: 2, p: 2, backgroundColor: rewritePrompt.backgroundColor, borderRadius: 4, maxWidth: 600, mx: 'auto' }}>
               <Typography variant="h6" sx={{ color: rewritePrompt.textColor, mb: 1 }}>
                 {rewritePrompt.label}
@@ -305,7 +303,6 @@ function MainPage() {
               />
             </Box>
 
-            {/* Submit Button */}
             <Button
               variant="contained"
               onClick={handleGenerate}
