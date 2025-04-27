@@ -1,6 +1,6 @@
-import pixcassoLogo from './images/pixcasso_logo.png'; 
-import pixcassoWhole from './images/pixcasso_whole.png'; 
-import aiDrawing from './images/aiDrawing.gif'; 
+import pixcassoLogo from '../images/pixcasso_logo.png'; 
+import pixcassoWhole from '../images/pixcasso_whole.png'; 
+import aiDrawing from '../images/aiDrawing.gif'; 
 
 export const config = {
   branding: {

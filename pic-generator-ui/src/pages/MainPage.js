@@ -1,10 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { AppBar, Toolbar, Typography, Container, Box, Button, TextField, Menu, MenuItem, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Typography, Container, Box, Button, TextField, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { config } from './configBranding';
+import { config } from '../configs/configBranding';
 
 // Placeholder images (simulating new generation)
 const initialPlaceholderImageUrl = 'https://via.placeholder.com/500x500';
@@ -15,14 +14,11 @@ function MainPage() {
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [modifications, setModifications] = useState({});
   const [prompt, setPrompt] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
   const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
   const [completedCrop, setCompletedCrop] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(null); 
 
   const {
-    logoPlaceholder,
-    header,
     mainPage: {
       initialHeading,
       initialImage,
@@ -32,7 +28,6 @@ function MainPage() {
       modifiedHeading,
       regionInputs,
       submitButton,
-      dropdown,
     },
   } = config.branding;
 
@@ -102,69 +97,9 @@ function MainPage() {
     }
   };
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuOption = (option) => {
-    console.log('Selected:', option.placeholder);
-    handleMenuClose();
-  };
-
   return (
     <div>
-      <AppBar position="static" sx={{ backgroundColor: header.backgroundColor }}>
-        <Toolbar>
-          <Box
-            sx={{
-              width: logoPlaceholder.size,
-              height: logoPlaceholder.size,
-              borderRadius: '50%',
-              backgroundColor: logoPlaceholder.backgroundColor,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mr: 2,
-            }}
-          >
-            {logoPlaceholder.logoSrc ? (
-              <img
-                src={logoPlaceholder.logoSrc}
-                alt="Pixcasso Logo"
-                style={{ width: '100%', height: '100%', borderRadius: '50%' }}
-              />
-            ) : (
-              <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
-                {logoPlaceholder.text}
-              </Typography>
-            )}
-          </Box>
-          <MenuIcon
-            sx={{ color: dropdown.menuIconColor, cursor: 'pointer' }}
-            onClick={handleMenuOpen}
-          />
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            sx={{ '& .MuiPaper-root': { backgroundColor: dropdown.backgroundColor } }}
-          >
-            {dropdown.options.map((option) => (
-              <MenuItem
-                key={option.label}
-                onClick={() => handleMenuOption(option)}
-                sx={{ color: dropdown.textColor }}
-              >
-                {option.label} (Placeholder: {option.placeholder})
-              </MenuItem>
-            ))}
-          </Menu>
-        </Toolbar>
-      </AppBar>
+      
 
       <Container sx={{ mt: 8, textAlign: 'center', padding: { xs: 2, md: 4 } }}>
         <Typography variant="h4" sx={{ mb: 4, color: '#455A64', fontWeight: 'bold' }}>
