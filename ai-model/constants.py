@@ -1,0 +1,1 @@
+INPUT_IMG_SIZE = 400

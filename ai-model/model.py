@@ -41,11 +41,13 @@ class ModelFactory():
     def generate_from_text(self, prompt):
         image = self.pipe_txt2img(prompt=prompt, height=400, width=400, strength=0.9, num_inference_steps=100).images[0]
         self.__save_image(image)
+        torch.cuda.empty_cache()
         return image
 
     def generate_from_image(self, prompt, init_image_path, strength=0.7):
         init_image = Image.open(init_image_path).convert("RGB").resize((256, 256))
         image = self.pipe_img2img(prompt=prompt, image=init_image, strength=strength).images[0]
         self.__save_image(image)
+        torch.cuda.empty_cache()
         return image
     

@@ -1,0 +1,15 @@
+@host = http://0.0.0.0:7860
+
+GET {{host}}/alive
+
+###
+
+GET {{host}}
+
+###
+
+POST {{host}}/txt-to-img
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+
+prompt=A red car in front of a house&size=400
