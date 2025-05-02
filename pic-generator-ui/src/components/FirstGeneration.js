@@ -5,7 +5,7 @@ import { config } from '../configs/configBranding';
 
 const initialPlaceholderImageUrl = 'https://via.placeholder.com/500x500';
 
-const FirstGeneration = ({handleGenerate}) => {
+const FirstGeneration = ({handleGenerate, setFirstPrompt}) => {
 
     const {
         mainPage: {
@@ -26,6 +26,17 @@ const FirstGeneration = ({handleGenerate}) => {
     const handlePromptChange = (event) => {
         setPrompt(event.target.value);
     };
+
+    function GenerateClicked(){
+
+      if(prompt === "" || prompt === null || prompt === undefined){
+        alert("Invalid message to the model!");
+        return;
+      }
+
+      setFirstPrompt(prompt);
+      handleGenerate();
+    }
 
     return (
         <>
@@ -61,7 +72,7 @@ const FirstGeneration = ({handleGenerate}) => {
             </Box>
             <Button
               variant="contained"
-              onClick={handleGenerate}
+              onClick={GenerateClicked}
               sx={{
                 backgroundColor: generateButton.backgroundColor,
                 color: generateButton.textColor,

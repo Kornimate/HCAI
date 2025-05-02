@@ -1,17 +1,17 @@
+import PIL.Image
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from model import *
 from service import *
 from constants import *
 import logging
 import time
 import uvicorn
+import PIL
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-model = ModelFactory()
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +29,7 @@ async def generate_image(
     logging.info("Model started to genearte img-to-img")
     start = time.time()
     input_image = load_image(await image.read(), INPUT_IMG_SIZE)
-    result = model.generate_from_image(prompt, input_image, strength)
+    result = PIL.Image.open("./generated_images/6c470ab1-2d2d-4408-9cdb-613cd28f003f.jpg")
     generated_img = image_to_byte_array(result)
     end = time.time()
     logging.info(f"Model generation finished, elapsed time: {end-start}")
@@ -42,7 +42,7 @@ async def generate_image(
 ):
     logging.info("Model started to genearte txt-to-img")
     start = time.time()
-    result = model.generate_from_text(prompt)
+    result = PIL.Image.open("./generated_images/6c470ab1-2d2d-4408-9cdb-613cd28f003f.jpg")
     generated_img = image_to_byte_array(result)
     end = time.time()
     logging.info(f"Model generation finished, elapsed time: {end-start}")

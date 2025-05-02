@@ -8,6 +8,7 @@ import FirstGeneration from '../components/FirstGeneration';
 function MainPage() {
   
   const [isModified, setIsModified] = useState(false);
+  const [firstPrompt, setFirstPrompt] = useState("");
   
   const {
     mainPage: {
@@ -27,7 +28,7 @@ function MainPage() {
           {isModified ? modifiedHeading : initialHeading}
         </Typography>
         <Box sx={{ mb: 4, mx: 'auto', position: 'relative', display: 'inline-block' }}>
-          {isModified ? <LoopGeneration />: <FirstGeneration handleGenerate={handleGenerate} /> }
+          {isModified ? <LoopGeneration firstPrompt={firstPrompt} />: <FirstGeneration handleGenerate={handleGenerate} setFirstPrompt={setFirstPrompt} /> }
         </Box>
       </Container>
     </div>

@@ -1,16 +1,21 @@
 import ReactCrop from 'react-image-crop';
-import { Typography, Box, TextField, IconButton, Button } from '@mui/material';
+import { Typography, Box, TextField, IconButton, Button, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { config } from '../configs/configBranding';
+import GeneratePromptFromArrayOfInstructions from '../services/PromptService';
+import axios from "axios";
+import { URLS } from '../configs/configURLs';
 
-const LoopGeneration = () => {
+const LoopGeneration = ({firstPrompt}) => {
 
     const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
     const [completedCrop, setCompletedCrop] = useState(null);
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
     const [selectedRegions, setSelectedRegions] = useState([]);
     const [modifications, setModifications] = useState({});
+    const [isInProgress, setIsInProgress] = useState(false)
+    const [prompt, setPrompt] = useState("")
 
       const {
         mainPage: {
@@ -26,9 +31,29 @@ const LoopGeneration = () => {
           setSelectedRegions([...selectedRegions, { id: regionId, ...crop }]);
           setModifications({ ...modifications, [regionId]: '' });
           setCompletedCrop(crop);
-          setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
+          setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 });
         }
     }, [selectedRegions, modifications]);
+
+    useEffect(() => {
+      if(firstPrompt === "" || firstPrompt === null || firstPrompt === undefined)
+        return;
+
+      setPrompt(firstPrompt)
+    }, [firstPrompt]);
+
+    useEffect(() => {
+      setIsInProgress(true);
+      
+      const enpoint = prompt === firstPrompt ? "txt-to-img" : "img-to-img";
+      axios.post(`${URLS.API_ENDPOINT_BASE}/${enpoint}`,{
+
+      }).then(result => {
+        
+      })
+
+      setIsInProgress(false);
+    }, [prompt]);
     
     const handleModificationChange = (regionId, value) => {
         setModifications({ ...modifications, [regionId]: value });
@@ -62,64 +87,86 @@ const LoopGeneration = () => {
     };
 
     const handleGenerate = () => {
-          // Simulate generating a new image based on modifications
-          console.log('Generating new image with modifications:', modifications);
+          console.log(selectedRegions)
+          console.log(modifications)
+          setPrompt(GeneratePromptFromArrayOfInstructions(modifications, selectedRegions))
           setCurrentImageUrl(""); // Switch to a new placeholder image
           setSelectedRegions([]); // Clear regions for new selections
           setModifications({}); // Clear modifications for new inputs
-          setCrop({ unit: 'px', x: 0, y: 0, width: 50, height: 50 }); // Reset crop
+          setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 }); // Reset crop
           setCompletedCrop(null); // Reset completed crop
-          // API call and update currentImageUrl with the result
-      };
+    };
 
     return (
-        <>
-            <ReactCrop
-            crop={crop}
-            onChange={(newCrop) => setCrop(newCrop)}
-            onComplete={onCropComplete}
-            >
-            <img
-                src={currentImageUrl}
-                alt="Generated"
-                style={{ width: generatedImage.width.sm, height: generatedImage.height.sm }}
-            />
-            </ReactCrop>
-            {selectedRegions.map((region) => (
+        isInProgress
+        ? 
+         (<Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center', width: '100%' }}>
+            <CircularProgress />
+        </Box>)
+        :(<>
+          <ReactCrop
+          crop={crop}
+          onChange={(newCrop) => setCrop(newCrop)}
+          onComplete={onCropComplete}
+          >
+          <img
+          src={currentImageUrl}
+          alt="Generated"
+          style={{ width: generatedImage.width.sm, height: generatedImage.height.sm }}
+          />
+          </ReactCrop>
+          
+          
+          <Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center', width: '100%' }}>
+          <Button
+          variant="contained"
+          onClick={handleDownload}
+          sx={{
+            backgroundColor: '#4CAF50', 
+            color: '#fff',
+            padding: submitButton.padding,
+            '&:hover': { backgroundColor: '#45a049' },
+          }}
+          >
+          Download
+          </Button>
+          </Box>
+          
+          {selectedRegions.map((region) => (
             <Box
-                key={region.id}
-                sx={{
-                position: 'absolute',
-                top: region.y,
-                left: region.x,
-                width: region.width,
-                height: region.height,
-                border: '2px solid red',
-                backgroundColor: 'rgba(255, 0, 0, 0.3)',
-                pointerEvents: 'none',
-                }}
+            key={region.id}
+            sx={{
+              position: 'absolute',
+              top: region.y,
+              left: region.x,
+              width: region.width,
+              height: region.height,
+              border: '2px solid red',
+              backgroundColor: 'rgba(255, 0, 0, 0.3)',
+              pointerEvents: 'none',
+            }}
             >
                 <Typography sx={{ color: 'white', fontSize: 12, textAlign: 'center' }}>
                 {region.id}
                 </Typography>
             </Box>
             ))}
-
+            
             {selectedRegions.map((region) => (
               <Box
-                key={region.id}
-                sx={{
-                  mb: 2,
-                  p: 2,
-                  backgroundColor: regionInputs.backgroundColor,
-                  borderRadius: 4,
-                  textAlign: 'left',
-                  maxWidth: 600,
-                  mx: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                }}
+              key={region.id}
+              sx={{
+                mb: 2,
+                p: 2,
+                backgroundColor: regionInputs.backgroundColor,
+                borderRadius: 4,
+                textAlign: 'left',
+                maxWidth: 600,
+                mx: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
               >
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" sx={{ color: regionInputs.textColor, mb: 1 }}>
@@ -132,49 +179,36 @@ const LoopGeneration = () => {
                     value={modifications[region.id] || ''}
                     onChange={(e) => handleModificationChange(region.id, e.target.value)}
                     sx={{ backgroundColor: '#fff' }}
-                  />
+                    />
                 </Box>
                 <IconButton
                   color="error"
                   onClick={() => handleRemoveRegion(region.id)}
                   sx={{ alignSelf: 'center' }}
-                >
+                  >
                   <DeleteIcon />
                 </IconButton>
               </Box>
             ))}
-
+            
             {selectedRegions.length > 0 && (
               <Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center', width: '100%' }}>
-                <Button
-                  variant="contained"
-                  onClick={handleGenerate}
-                  sx={{
-                    backgroundColor: submitButton.backgroundColor,
-                    color: submitButton.textColor,
-                    padding: submitButton.padding,
-                    '&:hover': { backgroundColor: submitButton.hoverColor },
-                  }}
-                >
-                  {submitButton.text}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleDownload}
-                  sx={{
-                    backgroundColor: '#4CAF50', 
-                    color: '#fff',
-                    padding: submitButton.padding,
-                    '&:hover': { backgroundColor: '#45a049' },
-                  }}
-                >
-                  Download
-                </Button>
+              <Button
+              variant="contained"
+              onClick={handleGenerate}
+              sx={{
+                backgroundColor: submitButton.backgroundColor,
+                color: submitButton.textColor,
+                padding: submitButton.padding,
+                '&:hover': { backgroundColor: submitButton.hoverColor },
+              }}
+              >
+              {submitButton.text}
+              </Button>
               </Box>
             )}
-            </>
-            
+        </>)
     )
 }
-
+        
 export default LoopGeneration;
