@@ -6,8 +6,10 @@ import { config } from '../configs/configBranding';
 import GeneratePromptFromArrayOfInstructions from '../services/PromptService';
 import axios from "axios";
 import { URLS } from '../configs/configURLs';
+import * as storageService from "../services/StorageService";
+import { useNavigate } from 'react-router-dom';
 
-const LoopGeneration = ({firstPrompt}) => {
+const LoopGeneration = ({firstPrompt, lastLoad}) => {
 
     const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -16,6 +18,8 @@ const LoopGeneration = ({firstPrompt}) => {
     const [isInProgress, setIsInProgress] = useState(true);
     const [imageBlob, setImageBlob] = useState(null);
     const [prompt, setPrompt] = useState({ value: "" })
+
+    const navigate = useNavigate();
 
       const {
         mainPage: {
@@ -33,6 +37,21 @@ const LoopGeneration = ({firstPrompt}) => {
           setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 });
         }
     }, [selectedRegions, modifications]);
+
+    useEffect(() => {
+      if(lastLoad === false || lastLoad === null || lastLoad === undefined)
+        return
+
+      storageService.GetData()
+      .then(result => {
+        HandleImageUrl(result)
+        setIsInProgress(false);
+      })
+      .catch(error => {
+        alert("No Image saved yet!")
+        navigate("/app");
+      });
+    }, [lastLoad])
 
     useEffect(() => {
       if(firstPrompt === "" || firstPrompt === null || firstPrompt === undefined)
@@ -77,11 +96,6 @@ const LoopGeneration = ({firstPrompt}) => {
         setIsInProgress(false);
       });
 
-      function HandleImageUrl(imgBlob){
-        const imageUrl = URL.createObjectURL(imgBlob);
-        setImageBlob(imgBlob)
-        setCurrentImageUrl(imageUrl)
-      }
     }, [prompt]);
     
     const handleModificationChange = (regionId, value) => {
@@ -123,6 +137,13 @@ const LoopGeneration = ({firstPrompt}) => {
           setModifications({}); // Clear modifications for new inputs
           setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 }); // Reset crop
     };
+
+    function HandleImageUrl(imgBlob){
+      const imageUrl = URL.createObjectURL(imgBlob);
+      setImageBlob(imgBlob);
+      storageService.SaveData(imgBlob);
+      setCurrentImageUrl(imageUrl);
+    }
 
     return (
         isInProgress

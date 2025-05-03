@@ -3,11 +3,16 @@ import { AppBar, Toolbar, Typography, Box, Menu, MenuItem } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import { config } from '../configs/configBranding';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 
 const AppLayout = () => {
 
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const { logoPlaceholder, header, mainPage: {dropdown} } = config.branding;
 
@@ -22,17 +27,20 @@ const AppLayout = () => {
       const handleMenuOption = (option) => {
         if(option.id === 1)
             NewPicGeneration();
-        else if (option.id === 2);
+        else if (option.id === 2)
             LastPicGeneration();
         handleMenuClose();
       };
 
       function NewPicGeneration(){
-        window.location.reload();
+        if(Array.from(searchParams).length > 0)
+            window.location = "/app"
+        else
+            window.location.reload();
       }
 
       function LastPicGeneration(){
-
+        navigate("/app?lastImgLoad=1")
       }
 
     return (
