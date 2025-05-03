@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LoopGeneration = ({firstPrompt, lastLoad}) => {
 
-    const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
+    const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 0, height: 0 });
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
     const [selectedRegions, setSelectedRegions] = useState([]);
     const [modifications, setModifications] = useState({});

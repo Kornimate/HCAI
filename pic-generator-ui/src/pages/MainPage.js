@@ -32,9 +32,16 @@ function MainPage() {
         <Typography variant="h4" sx={{ mb: 4, color: '#455A64', fontWeight: 'bold' }}>
           {isModified ? modifiedHeading : initialHeading}
         </Typography>
-        <Box sx={{ mb: 4, mx: 'auto', position: 'relative', display: 'inline-block' }}>
-          {isModified || sParamResult ? <LoopGeneration firstPrompt={firstPrompt} lastLoad={sParamResult} />: <FirstGeneration handleGenerate={handleGenerate} setFirstPrompt={setFirstPrompt} /> }
-        </Box>
+        {
+          isModified || sParamResult
+          ? <Box sx={{ mb: 4, mx: 'auto', position: 'relative', display: 'inline-block' }}>
+              <LoopGeneration firstPrompt={firstPrompt} lastLoad={sParamResult} />
+            </Box> 
+          : <Box sx={{ mb: 4, mx: 'auto', position: 'relative', display: 'block' }}>
+              <FirstGeneration handleGenerate={handleGenerate} setFirstPrompt={setFirstPrompt} />
+            </Box>
+        }
+        
       </Container>
     </div>
   );
