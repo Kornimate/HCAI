@@ -10,12 +10,12 @@ import { URLS } from '../configs/configURLs';
 const LoopGeneration = ({firstPrompt}) => {
 
     const [crop, setCrop] = useState({ unit: 'px', x: 0, y: 0, width: 50, height: 50 });
-    const [completedCrop, setCompletedCrop] = useState(null);
     const [currentImageUrl, setCurrentImageUrl] = useState(null);
     const [selectedRegions, setSelectedRegions] = useState([]);
     const [modifications, setModifications] = useState({});
-    const [isInProgress, setIsInProgress] = useState(false)
-    const [prompt, setPrompt] = useState("")
+    const [isInProgress, setIsInProgress] = useState(true);
+    const [imageBlob, setImageBlob] = useState(null);
+    const [prompt, setPrompt] = useState({ value: "" })
 
       const {
         mainPage: {
@@ -30,7 +30,6 @@ const LoopGeneration = ({firstPrompt}) => {
           const regionId = selectedRegions.length + 1;
           setSelectedRegions([...selectedRegions, { id: regionId, ...crop }]);
           setModifications({ ...modifications, [regionId]: '' });
-          setCompletedCrop(crop);
           setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 });
         }
     }, [selectedRegions, modifications]);
@@ -39,20 +38,50 @@ const LoopGeneration = ({firstPrompt}) => {
       if(firstPrompt === "" || firstPrompt === null || firstPrompt === undefined)
         return;
 
-      setPrompt(firstPrompt)
+      setPrompt({ value: firstPrompt })
+      setIsInProgress(false)
     }, [firstPrompt]);
 
     useEffect(() => {
+      if(prompt.value === "" || prompt.value === undefined || prompt.value === null)
+        return;
+
       setIsInProgress(true);
       
-      const enpoint = prompt === firstPrompt ? "txt-to-img" : "img-to-img";
-      axios.post(`${URLS.API_ENDPOINT_BASE}/${enpoint}`,{
+      let endpoint = null;
+      let payload = null;
+      let headers = null;
 
-      }).then(result => {
-        
-      })
+      if(prompt.value === firstPrompt){
+        endpoint =  "txt-to-img";
+        payload = new FormData();
+        payload.append("prompt", prompt.value);
+        headers = {
+          responseType: "blob"
+        }
+      } else {
+        endpoint = "img-to-img";
+        payload = new FormData();
+        payload.append("image", imageBlob, "generated.jpg");
+        payload.append("prompt", prompt.value);
+        headers = {
+          responseType: "blob",
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      }
+      
+      axios.post(`${URLS.API_ENDPOINT_BASE}/${endpoint}`, payload, headers).then(result => {
+        HandleImageUrl(result.data);
+        setIsInProgress(false);
+      });
 
-      setIsInProgress(false);
+      function HandleImageUrl(imgBlob){
+        const imageUrl = URL.createObjectURL(imgBlob);
+        setImageBlob(imgBlob)
+        setCurrentImageUrl(imageUrl)
+      }
     }, [prompt]);
     
     const handleModificationChange = (regionId, value) => {
@@ -89,12 +118,10 @@ const LoopGeneration = ({firstPrompt}) => {
     const handleGenerate = () => {
           console.log(selectedRegions)
           console.log(modifications)
-          setPrompt(GeneratePromptFromArrayOfInstructions(modifications, selectedRegions))
-          setCurrentImageUrl(""); // Switch to a new placeholder image
+          setPrompt({ value: GeneratePromptFromArrayOfInstructions(modifications, selectedRegions) })
           setSelectedRegions([]); // Clear regions for new selections
           setModifications({}); // Clear modifications for new inputs
           setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 }); // Reset crop
-          setCompletedCrop(null); // Reset completed crop
     };
 
     return (
@@ -116,20 +143,20 @@ const LoopGeneration = ({firstPrompt}) => {
           />
           </ReactCrop>
           
-          
           <Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center', width: '100%' }}>
-          <Button
-          variant="contained"
-          onClick={handleDownload}
-          sx={{
-            backgroundColor: '#4CAF50', 
-            color: '#fff',
-            padding: submitButton.padding,
-            '&:hover': { backgroundColor: '#45a049' },
-          }}
-          >
-          Download
-          </Button>
+            <Button
+            variant="contained"
+            onClick={handleDownload}
+            sx={{
+              backgroundColor: '#4CAF50', 
+              color: '#fff',
+              my: 2,
+              padding: submitButton.padding,
+              '&:hover': { backgroundColor: '#45a049' },
+            }}
+            >
+            Download
+            </Button>
           </Box>
           
           {selectedRegions.map((region) => (

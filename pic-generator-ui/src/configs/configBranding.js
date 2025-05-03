@@ -100,8 +100,8 @@ export const config = {
       dropdown: {
         menuIconColor: '#fff',
         options: [
-          { label: 'New Pic Generation', placeholder: 'New Pic Placeholder' },
-          { label: 'Last Generation', placeholder: 'Last Gen Placeholder' },
+          { label: 'New Picture Generation', id: 1 },
+          { label: 'Last Picture Generation', id: 2 },
         ],
         backgroundColor: '#424242',
         textColor: '#fff',

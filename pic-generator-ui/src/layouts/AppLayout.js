@@ -20,9 +20,20 @@ const AppLayout = () => {
       };
     
       const handleMenuOption = (option) => {
-        console.log('Selected:', option.placeholder);
+        if(option.id === 1)
+            NewPicGeneration();
+        else if (option.id === 2);
+            LastPicGeneration();
         handleMenuClose();
       };
+
+      function NewPicGeneration(){
+        window.location.reload();
+      }
+
+      function LastPicGeneration(){
+
+      }
 
     return (
         <>
@@ -68,7 +79,7 @@ const AppLayout = () => {
                         onClick={() => handleMenuOption(option)}
                         sx={{ color: dropdown.textColor }}
                     >
-                        {option.label} (Placeholder: {option.placeholder})
+                        {option.label}
                     </MenuItem>
                     ))}
                 </Menu>

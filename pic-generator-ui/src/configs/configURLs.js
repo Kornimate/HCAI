@@ -1,3 +1,3 @@
 export const URLS = Object.freeze({
-    API_ENDPOINT_BASE : "http://0.0.0.0:7860",
+    API_ENDPOINT_BASE : "http://127.0.0.1:7860",
 });
