@@ -130,8 +130,11 @@ const LoopGeneration = ({firstPrompt, lastLoad}) => {
     };
 
     const handleGenerate = () => {
-          console.log(selectedRegions)
-          console.log(modifications)
+          // console.log(CheckIfModificationsAreValid())
+          if(!CheckIfModificationsAreValid()){
+            alert("Every modification must have a description!");
+            return;
+          }
           setPrompt({ value: GeneratePromptFromArrayOfInstructions(modifications, selectedRegions) })
           setSelectedRegions([]); // Clear regions for new selections
           setModifications({}); // Clear modifications for new inputs
@@ -144,6 +147,16 @@ const LoopGeneration = ({firstPrompt, lastLoad}) => {
       storageService.SaveData(imgBlob);
       setCurrentImageUrl(imageUrl);
     }
+
+    function CheckIfModificationsAreValid(){
+      let valid = true;
+
+      Object.values(modifications).forEach(modification => {
+        valid &&= modification !== "";
+      });
+
+      return valid;
+    };
 
     return (
         isInProgress

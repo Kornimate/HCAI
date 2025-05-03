@@ -1,17 +1,19 @@
 import { Outlet } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Box, Menu, MenuItem } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Menu, MenuItem, Button } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { config } from '../configs/configBranding';
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 
 
 const AppLayout = () => {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const navigate = useNavigate();
+    const location = useLocation();
+
+    const isOnMainPage = location.pathname.startsWith("/app")
+
     const [searchParams] = useSearchParams();
 
     const { logoPlaceholder, header, mainPage: {dropdown} } = config.branding;
@@ -40,7 +42,11 @@ const AppLayout = () => {
       }
 
       function LastPicGeneration(){
-        navigate("/app?lastImgLoad=1")
+         window.location = "/app?lastImgLoad=1";
+      }
+
+      function NavigateToLandingPage(){
+        window.location = "/";
       }
 
     return (
@@ -60,37 +66,43 @@ const AppLayout = () => {
                     }}
                 >
                     {logoPlaceholder.logoSrc ? (
-                    <img
-                        src={logoPlaceholder.logoSrc}
-                        alt="Pixcasso Logo"
-                        style={{ width: '100%', height: '100%', borderRadius: '50%' }}
-                    />
+                    <Button onClick={NavigateToLandingPage}>
+                        <img
+                            src={logoPlaceholder.logoSrc}
+                            alt="Pixcasso Logo"
+                            style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+                            />
+                    </Button>
                     ) : (
                     <Typography variant="h6" sx={{ color: logoPlaceholder.textColor }}>
                         {logoPlaceholder.text}
                     </Typography>
                     )}
                 </Box>
-                <MenuIcon
-                    sx={{ color: dropdown.menuIconColor, cursor: 'pointer' }}
-                    onClick={handleMenuOpen}
-                />
-                <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                    sx={{ '& .MuiPaper-root': { backgroundColor: dropdown.backgroundColor } }}
-                >
-                    {dropdown.options.map((option) => (
-                    <MenuItem
-                        key={option.label}
-                        onClick={() => handleMenuOption(option)}
-                        sx={{ color: dropdown.textColor }}
-                    >
-                        {option.label}
-                    </MenuItem>
-                    ))}
-                </Menu>
+                { 
+                    isOnMainPage && <>
+                        <MenuIcon
+                            sx={{ color: dropdown.menuIconColor, cursor: 'pointer' }}
+                            onClick={handleMenuOpen}
+                            />
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                            sx={{ '& .MuiPaper-root': { backgroundColor: dropdown.backgroundColor } }}
+                            >
+                            {dropdown.options.map((option) => (
+                                <MenuItem
+                                key={option.label}
+                                onClick={() => handleMenuOption(option)}
+                                sx={{ color: dropdown.textColor }}
+                                >
+                                {option.label}
+                            </MenuItem>
+                            ))}
+                        </Menu>
+                    </> 
+                }
                 </Toolbar>
             </AppBar>
             <Outlet />
