@@ -3,7 +3,7 @@ from PIL import Image
 import base64
 import torch
 
-def load_image(image_bytes, size): #size can be 256,512,1024
+def load_image(image_bytes, size=400):
     image = Image.open(BytesIO(image_bytes)).convert("RGB")
     image = image.resize((size, size))
     return image
