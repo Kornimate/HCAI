@@ -1,0 +1,17 @@
+first generation:
+    a portrait painting of a young woman, Rembrandt style
+    a cyberpunk cityscape at night, concept art, digital painting
+    a surreal landscape with floating islands, fantasy art
+    a golden retriever sitting in a field of flowers
+    mountains during golden hour, scenic view
+    a desert with cactus and a colorful sunset
+    a medieval castle on a cliff, detailed painting
+
+loop generation:
+    a golden pocket watch with intricate gears
+    a cracked medieval helmet with rust
+    a steaming cup of coffee on a wooden table
+    a hovering holographic control panel
+    a campfire with glowing embers and smoke
+    a waterfall cascading into a crystal-clear pool
+    realistic oil painting, cinematic lighting
