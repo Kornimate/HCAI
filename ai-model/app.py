@@ -7,6 +7,7 @@ from service import *
 from constants import *
 import logging
 import time
+import json
 import uvicorn
 
 logging.basicConfig(level=logging.INFO)
@@ -33,14 +34,14 @@ app.add_middleware(
     response_description="A JPEG image stream of the generated image"
 )
 async def generate_image(
-    prompt: str = Form(..., description="Text prompt to guide the image generation"),
-    image: UploadFile = File(..., description="Input image file (JPEG or PNG)"),
-    strength: float = Form(0.7, description="Strength of the image transformation (0.0-1.0)")
+    prompt: str = Form(..., description="Special json converted text prompt to guide the image generation"),
+    image: UploadFile = File(..., description="Input image file (JPEG or PNG)")
 ):
+    promptData = json.loads(prompt)
     logging.info("Model started to generate img-to-img")
     start = time.time()
     input_image = load_image(await image.read(), INPUT_IMG_SIZE)
-    result = model.generate_from_image(prompt, input_image, strength)
+    result = model.generate_from_image(promptData, input_image)
     generated_img = image_to_byte_array(result)
     end = time.time()
     logging.info(f"Model generation finished, elapsed time: {end-start}")

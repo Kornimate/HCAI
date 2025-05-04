@@ -8,6 +8,7 @@ import logging
 import time
 import uvicorn
 import PIL
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -26,6 +27,7 @@ async def generate_image(
     image: UploadFile = File(...),
     strength: float = Form(0.5)
 ):
+    print(json.loads(prompt))
     logging.info("Model started to genearte img-to-img")
     start = time.time()
     input_image = load_image(await image.read(), INPUT_IMG_SIZE)

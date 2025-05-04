@@ -3,7 +3,7 @@ import { Typography, Box, TextField, IconButton, Button, CircularProgress } from
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useCallback, useEffect } from 'react';
 import { config } from '../configs/configBranding';
-import GeneratePromptFromArrayOfInstructions from '../services/PromptService';
+import GeneratePromptJSONFromArrayOfInstructions from '../services/PromptService';
 import axios from "axios";
 import { URLS } from '../configs/configURLs';
 import * as storageService from "../services/StorageService";
@@ -135,7 +135,7 @@ const LoopGeneration = ({firstPrompt, lastLoad}) => {
             alert("Every modification must have a description!");
             return;
           }
-          setPrompt({ value: GeneratePromptFromArrayOfInstructions(modifications, selectedRegions) })
+          setPrompt({ value: GeneratePromptJSONFromArrayOfInstructions(modifications, selectedRegions) })
           setSelectedRegions([]); // Clear regions for new selections
           setModifications({}); // Clear modifications for new inputs
           setCrop({ unit: 'px', x: 0, y: 0, width: 0, height: 0 }); // Reset crop
