@@ -65,7 +65,7 @@ class ModelFactory():
             prompt = self.__truncate_prompt(promptInstance[0])
             mask = self.__create_img_mask(promptInstance[1], init_image.size)
             mask = mask.filter(ImageFilter.GaussianBlur(radius=5))
-            image = self.pipe_img2img(prompt=prompt, image=image, strength=strength,mask_image = mask, num_inference_steps=103).images[0]
+            image = self.pipe_img2img(prompt=prompt, image=image, strength=strength,mask_image = mask, num_inference_steps=40).images[0]
         # self.__save_image(init_image)
         torch.cuda.empty_cache()
         return image

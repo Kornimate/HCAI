@@ -24,6 +24,8 @@ const LandingPage = () => {
                     justifyContent: 'center',
                     mx: 'auto',
                     mb: 4,
+                    padding: 1,
+                    borderRadius: 10,
                     border: `1px solid ${imagePlaceholder.borderColor}`,
                 }}
                 >
@@ -31,7 +33,7 @@ const LandingPage = () => {
                     <img
                     src={imagePlaceholder.src}
                     alt="Front Page Preview"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', marginRight: 3 }}
                     />
                 ) : (
                     <Typography variant="body1">No Image Available</Typography>
