@@ -1,15 +1,15 @@
 Base generation:
 
-A cozy reading nook by the window, soft morning light, books stacked, warm blanket, realistic lighting
+-->A cozy reading nook by the window, soft morning light, books stacked, warm blanket, realistic lighting
 A futuristic cyberpunk cityscape at night, neon lights, flying cars, dense fog, highly detailed
-A medieval knight in shining armor standing in a forest, moody atmosphere, cinematic lighting
+-->A medieval knight in shining armor standing in a forest, moody atmosphere, cinematic lighting
 A whimsical cottage in a magical forest, glowing mushrooms, fantasy art style, vibrant colors
 --> A serene beach at sunrise, gentle waves, palm trees, soft golden light, photorealistic
 
 Inpainting:
 
-Add a sleeping cat curled up on the blanket
+-->Add a sleeping cat curled up on the blanket
 Replace a billboard with a glowing hologram advertisement for a futuristic soda
-Add a sword in the knight’s hand
+-->Add a magical glowing sword in the knight’s hand
 Replace the door with a round, glowing elven-style entrance
 --> Add a person walking near the shoreline
